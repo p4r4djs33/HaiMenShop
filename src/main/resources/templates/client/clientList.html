@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        p {
+            text-transform:uppercase;
+        }
+    </style>
+
+</head>
+<body style="text-transform:uppercase;  font-weight: bold; font-size: 20px; text-align: center">
+
+<div th:insert="header :: header"></div>
+
+
+<div class="container">
+    <div class="main-body">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Danh sách khách hàng</li>
+                <li class="breadcrumb-item"><a th:href="@{/add-client}">Thêm mới khách hàng</a></li>
+            </ol>
+        </nav>
+        <!-- /Breadcrumb -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form class="row" style="margin-bottom: 20px;" th:action="@{/search}" method="post">
+                            <input class="col-sm-9" type="text" th:name="name" placeholder="Nhập tên khách muốn tìm">
+                            <input class="col-sm-3" type="submit" value="Tìm kiếm">
+                        </form>
+
+                        <div class="row" style="border-bottom: 1px solid; border-top: 1px solid" th:each="row : ${clientList}">
+                            <div class="col-sm-4" style="border-right: 1px solid">
+                                <div class="row justify-content-center">
+                                    <p th:text="${row.getName()}"></p>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <p th:text="${row.getTypeFabric()}"></p>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <p th:text="${row.getMoneyFabric()}"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="row justify-content-center">
+                                    <p th:text="${row.getMeasure()}"></p>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <p th:text="${row.getMoreInformation()}"></p>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <p th:text="${row.getDeposit()}"></p>
+                                </div>
+                                <div class="row justify-content-between">
+                                    <div class="col-auto mr-auto">
+                                        <p th:text="${row.getDateCreation()}"></p>
+                                    </div>
+                                    <div class="col-auto">
+                                        <p th:text="${row.getDateEnd()}"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="font-size: 25px; text-align: center">
+                            <a th:href="@{'/'(page=${clientList.number - 1})}" th:if="${clientList.hasPrevious()}">Trước</a>
+                            <span th:text="${clientList.number + 1}"></span>/<span th:text="${clientList.totalPages}"></span>
+                            <a th:href="@{'/'(page=${clientList.number + 1})}" th:if="${clientList.hasNext()}">Sau</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
