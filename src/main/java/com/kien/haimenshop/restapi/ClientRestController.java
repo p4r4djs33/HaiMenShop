@@ -44,7 +44,7 @@ public class ClientRestController {
     @PostMapping("/client/update/{id}")
     public Client clientUpdate(@PathVariable(value = "id", required = false) String id,
                                     @RequestBody(required = false) Client client) {
-        System.out.println("Call clientUpdate: " + client);
+        System.out.println("Call clientUpdate: " + client + " " + id);
         Client clientOld = clientService.findClientById(Long.parseLong(id));
         clientOld.setName(client.getName());
         clientOld.setTypeFabric(client.getTypeFabric());
