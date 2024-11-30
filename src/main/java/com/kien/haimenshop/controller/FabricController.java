@@ -15,6 +15,7 @@ public class FabricController {
     @GetMapping("/fabric")
     public ModelAndView home(@PageableDefault(size = 5) Pageable pageable){
         ModelAndView modelAndView = new ModelAndView("fabric/fabricList");
+        modelAndView.addObject("fabricList", fabricService.findAllFabric(pageable));
         return modelAndView;
     }
 

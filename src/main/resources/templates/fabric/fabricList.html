@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh Sách Khách Hàng</title>
+    <title>Danh Sách Loại Vải</title>
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
@@ -12,8 +12,8 @@
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
-            text-transform: uppercase; /* Áp dụng viết hoa cho toàn bộ văn bản */
-            text-align: center; /* Căn giữa văn bản trong body */
+            text-transform: uppercase;
+            text-align: center;
         }
 
         .container {
@@ -56,7 +56,7 @@
         th, td {
             padding: 12px;
             border-bottom: 1px solid #ddd;
-            text-align: center; /* Căn giữa văn bản trong body */
+            text-align: center;
         }
 
         th {
@@ -66,17 +66,6 @@
 
         tr:hover {
             background-color: #f1f1f1;
-        }
-
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        input[type="checkbox"] {
-            transform: scale(1.3);
-            margin-right: 10px;
         }
 
         .footer {
@@ -117,6 +106,7 @@
             pointer-events: none;
             color: #666;
         }
+
 
         /* Modal Styles */
         .modal {
@@ -200,25 +190,6 @@
         button:hover {
             background-color: #0056b3; /* Đổi màu khi hover */
         }
-
-        /* Các kiểu CSS khác của bạn */
-        /* ... */
-
-        .export-button {
-            background-color: #007BFF; /* Màu xanh dương cho nút xuất */
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            text-transform: uppercase; /* Viết hoa cho văn bản */
-            margin-left: 20px; /* Khoảng cách với nút khác */
-        }
-
-        .export-button:hover {
-            background-color: #0056b3; /* Đổi màu khi hover */
-        }
     </style>
 </head>
 <body>
@@ -231,50 +202,28 @@
         <a th:href="@{/fabric}">Danh sách loại vải</a>
     </nav>
 
-    <h1>Danh Sách Khách Hàng</h1>
-    <button class="export-button" onclick="exportToExcel()">Xuất Excel</button> <!-- Nút xuất Excel -->
+    <h1>Danh Sách Loại Vải</h1>
+    <!-- Nút Thêm Vải -->
+    <!-- Nút Thêm Vải -->
+    <div style="text-align: right; margin-bottom: 20px;">
+        <button style="padding: 10px 20px; font-size: 16px; border-radius: 5px; background-color: #4CAF50; color: white; border: none; cursor: pointer; transition: background-color 0.3s;" onclick="openAddFabricModal()">Thêm Vải</button>
+    </div>
     <table>
         <thead>
         <tr>
-            <th>Tên Khách Hàng</th>
             <th>Loại Vải</th>
             <th>Tiền May</th>
-            <th>Số Đo</th>
-            <th>Thông Tin Thêm</th>
-            <th>Đặt Cọc</th>
-            <th>Ngày May</th>
-            <th>Ngày Lấy</th>
-            <th>Tình trạng</th>
             <th></th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="client : ${clientList}">
-            <td th:text="${client.name.toUpperCase()}"></td>
-            <td th:text="${client.typeFabric.toUpperCase()}"></td>
-            <td th:text="${client.moneyFabric}"></td>
-            <td th:text="${client.measure}"></td>
-            <td th:text="${client.moreInformation}"></td>
-            <td th:text="${client.deposit}"></td>
-            <td th:text="${client.dateCreation}"></td>
-            <td th:text="${client.dateEnd}"></td>
-            <td class="checkbox-container">
-                <input type="checkbox"
-                       th:checked="${client.isTaken}"
-                       th:data-id="${client.id}"
-                       onclick="updateClientStatus(this)"/>
-                <span th:text="${client.isTaken ? 'Đã lấy' : 'Chưa lấy'}"></span>
-            </td>
+        <tr th:each="fabric : ${fabricList}">
+            <td th:text="${fabric.typeFabric.toUpperCase()}"></td>
+            <td th:text="${fabric.moneyFabric}"></td>
             <td>
-                <button th:data-id="${client.id}"
-                        th:data-name="${client.name}"
-                        th:data-type-fabric="${client.typeFabric}"
-                        th:data-money-fabric="${client.moneyFabric}"
-                        th:data-measure="${client.measure}"
-                        th:data-more-information="${client.moreInformation}"
-                        th:data-deposit="${client.deposit}"
-                        th:data-date-creation="${client.dateCreation}"
-                        th:data-date-end="${client.dateEnd}"
+                <button th:data-id="${fabric.id}"
+                        th:data-type-fabric="${fabric.typeFabric}"
+                        th:data-money-fabric="${fabric.moneyFabric}"
                         onclick="openModal(this)">Sửa</button>
             </td>
         </tr>
@@ -282,19 +231,33 @@
     </table>
 
     <div class="pagination">
-        <a th:classappend="${!clientList.hasPrevious()} ? 'disabled'"
-           th:href="@{'/'(page=${clientList.number - 1})}" class="page-link">Trước</a>
+        <a th:classappend="${!fabricList.hasPrevious()} ? 'disabled'"
+           th:href="@{'/fabric'(page=${fabricList.number - 1})}" class="page-link">Trước</a>
 
         <span class="page-item">
-        Trang <strong th:text="${clientList.number + 1}"></strong> /
-        <strong th:text="${clientList.totalPages}"></strong>
+        Trang <strong th:text="${fabricList.number + 1}"></strong> /
+        <strong th:text="${fabricList.totalPages}"></strong>
     </span>
 
-        <a th:classappend="${!clientList.hasNext()} ? 'disabled'"
-           th:href="@{'/'(page=${clientList.number + 1})}" class="page-link">Sau</a>
+        <a th:classappend="${!fabricList.hasNext()} ? 'disabled'"
+           th:href="@{'/fabric'(page=${fabricList.number + 1})}" class="page-link">Sau</a>
     </div>
     <div class="footer">
         <p>&copy; 2024 Công ty HaiMenShop. Tất cả quyền được bảo lưu.</p>
+    </div>
+</div>
+
+<!-- Modal cho Thêm Vải -->
+<div id="addFabricModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAddFabricModal()">&times;</span>
+        <h2>Thêm Loại Vải</h2>
+        <input type="text" id="newFabricType" placeholder="Loại Vải">
+        <input type="text" id="newFabricMoney" placeholder="Tiền Vải" oninput="formatCurrency(this)">
+        <div style="text-align: right;">
+            <button onclick="addFabric()">Thêm</button>
+            <button onclick="closeAddFabricModal()">Quay lại</button>
+        </div>
     </div>
 </div>
 
@@ -302,80 +265,63 @@
 <div id="myModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
-        <h2>Thông Tin Khách Hàng</h2>
-        <input type="text" id="clientId" placeholder="Id" style="display: none;">
-        <input type="text" id="clientName" placeholder="Tên Khách Hàng">
-        <input type="text" id="clientTypeFabric" placeholder="Loại Vải">
-        <input type="text" id="clientMoneyFabric" placeholder="Tiền May" oninput="formatCurrency(this)">
-        <input type="text" id="clientMeasure" placeholder="Số Đo">
-        <input type="text" id="clientMoreInformation" placeholder="Thông Tin Thêm">
-        <input type="text" id="clientDeposit" placeholder="Đặt Cọc" oninput="formatCurrency(this)">
-        <input type="text" id="clientDateCreation" name="clientDateCreation" placeholder="Ngày May">
-        <input type="text" id="clientDateEnd" name="clientDateEnd" placeholder="Ngày Lấy">
+        <h2>Thông Tin Loại Vải</h2>
+        <input type="text" id="fabricId" placeholder="Id" style="display: none;">
+        <input type="text" id="fabricType" placeholder="Loại Vải">
+        <input type="text" id="fabricMoney" placeholder="Tiền Vải" oninput="formatCurrency(this)">
         <div style="text-align: right;">
-            <button onclick="updateClient()">Sửa</button>
+            <button onclick="updateFabric()">Sửa</button>
             <button onclick="closeModal()">Quay lại</button>
         </div>
     </div>
 </div>
-<!-- Flatpickr JS -->
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>
 
-    function exportToExcel() {
-        window.location.href = '/export/excel/online'; // Đường dẫn đến API xuất Excel
+<script>
+    function openAddFabricModal() {
+        document.getElementById('addFabricModal').style.display = "block";
     }
 
-    // Các hàm JavaScript khác của bạn
-    // ...
-    function updateClientStatus(checkbox) {
-        const clientId = checkbox.getAttribute('data-id');
-        const isTaken = checkbox.checked;
+    function closeAddFabricModal() {
+        document.getElementById('addFabricModal').style.display = "none";
+    }
 
-        // Cập nhật văn bản trạng thái
-        const statusText = checkbox.nextElementSibling; // Lấy phần tử <span> bên cạnh checkbox
-        statusText.textContent = isTaken ? 'Đã lấy' : 'Chưa lấy';
+    function addFabric() {
+        const newFabric = {
+            typeFabric: document.getElementById('newFabricType').value,
+            moneyFabric: document.getElementById('newFabricMoney').value,
+        };
 
-        fetch(`/client/take/product?id=${clientId}&isTaken=${isTaken}`)
+        // Gửi dữ liệu thêm mới đến server
+        fetch(`/fabric/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newFabric)
+        })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                if (response.ok) {
+                    console.log('Thêm mới thành công');
+                    closeAddFabricModal();
+                    location.reload(); // Tải lại trang để cập nhật danh sách
+                } else {
+                    console.error('Có lỗi xảy ra khi thêm mới');
                 }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Cập nhật thành công:', data);
             })
             .catch(error => {
                 console.error('Có lỗi xảy ra:', error);
-                // Có thể reset trạng thái checkbox nếu cần
-                checkbox.checked = !isTaken; // Đặt lại trạng thái checkbox nếu có lỗi
-                // Cập nhật lại trạng thái văn bản
-                statusText.textContent = checkbox.checked ? 'Đã lấy' : 'Chưa lấy';
             });
     }
 
     function openModal(button) {
         const id = button.getAttribute('data-id');
-        const name = button.getAttribute('data-name');
         const typeFabric = button.getAttribute('data-type-fabric');
         const moneyFabric = button.getAttribute('data-money-fabric');
-        const measure = button.getAttribute('data-measure');
-        const moreInformation = button.getAttribute('data-more-information');
-        const deposit = button.getAttribute('data-deposit');
-        const dateCreation = button.getAttribute('data-date-creation');
-        const dateEnd = button.getAttribute('data-date-end');
 
         // Điền các giá trị vào input trong modal
-        document.getElementById('clientId').value = id;
-        document.getElementById('clientName').value = name;
-        document.getElementById('clientTypeFabric').value = typeFabric;
-        document.getElementById('clientMoneyFabric').value = moneyFabric;
-        document.getElementById('clientMeasure').value = measure;
-        document.getElementById('clientMoreInformation').value = moreInformation;
-        document.getElementById('clientDeposit').value = deposit;
-        document.getElementById('clientDateCreation').value = dateCreation;
-        document.getElementById('clientDateEnd').value = dateEnd;
+        document.getElementById('fabricId').value = id;
+        document.getElementById('fabricType').value = typeFabric;
+        document.getElementById('fabricMoney').value = moneyFabric;
 
         // Mở modal
         document.getElementById('myModal').style.display = "block";
@@ -385,33 +331,25 @@
         document.getElementById('myModal').style.display = "none";
     }
 
-    function updateClient() {
-        // Lấy thông tin từ các input
-        const updatedClient = {
-            id: document.getElementById('clientId').value,
-            name: document.getElementById('clientName').value,
-            typeFabric: document.getElementById('clientTypeFabric').value,
-            moneyFabric: document.getElementById('clientMoneyFabric').value,
-            measure: document.getElementById('clientMeasure').value,
-            moreInformation: document.getElementById('clientMoreInformation').value,
-            deposit: document.getElementById('clientDeposit').value,
-            dateCreation: document.getElementById('clientDateCreation').value,
-            dateEnd: document.getElementById('clientDateEnd').value
+    function updateFabric() {
+        const updatedFabric = {
+            id: document.getElementById('fabricId').value,
+            typeFabric: document.getElementById('fabricType').value,
+            moneyFabric: document.getElementById('fabricMoney').value,
         };
 
         // Gửi dữ liệu cập nhật đến server
-        fetch(`/client/update/${updatedClient.id}`, {
+        fetch(`/fabric/update/${updatedFabric.id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(updatedClient)
+            body: JSON.stringify(updatedFabric)
         })
             .then(response => {
                 if (response.ok) {
                     console.log('Cập nhật thành công');
                     closeModal();
-                    // Cập nhật lại danh sách khách hàng nếu cần
                     location.reload(); // Tải lại trang để cập nhật danh sách
                 } else {
                     console.error('Có lỗi xảy ra khi cập nhật');
@@ -421,6 +359,7 @@
                 console.error('Có lỗi xảy ra:', error);
             });
     }
+
 
     function formatCurrency(input) {
         // Xóa tất cả ký tự không phải số
@@ -437,15 +376,7 @@
         // Di chuyển con trỏ đến cuối ô input
         input.setSelectionRange(input.value.length, input.value.length);
     }
-
-    flatpickr("#clientDateCreation", {
-        dateFormat: "d-m-Y", // Định dạng ngày
-        // locale: "vi" // Cài đặt ngôn ngữ
-    });
-    flatpickr("#clientDateEnd", {
-        dateFormat: "d-m-Y", // Định dạng ngày cho dateEnd
-        locale: "vi" // Cài đặt ngôn ngữ
-    });
 </script>
+
 </body>
 </html>

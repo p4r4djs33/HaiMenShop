@@ -47,12 +47,13 @@ public class MainController {
                                    @RequestParam(value = "measure", required = false) String measure,
                                    @RequestParam(value = "moreInformation", required = false) String moreInformation,
                                    @RequestParam(value = "deposit", required = false) String deposit,
+                                   @RequestParam(value = "dateCreation", required = false) String dateCreation,
                                    @RequestParam(value = "dateEnd", required = false) String dateEnd) {
         ModelAndView modelAndView = new ModelAndView("redirect:/");
         System.out.println(name + " " + typeFabric + " " + moneyFabric + " " + measure + " " + moreInformation + " " + deposit + " " + dateEnd);
         Client client = new Client();
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         // Tạo đối tượng Date hiện tại
         Date dateNow = new Date();
 
@@ -61,7 +62,7 @@ public class MainController {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
 
-        String formattedDate = localDateTime.format(outputFormatter);
+//        String formattedDate = localDateTime.format(outputFormatter);
 
         client.setName(name.toLowerCase());
         client.setTypeFabric(typeFabric);
@@ -69,9 +70,9 @@ public class MainController {
         client.setMeasure(measure);
         client.setMoreInformation(moreInformation);
         client.setDeposit(deposit);
-        client.setDateCreation(formattedDate);
-        LocalDate dateEndFormat = LocalDate.parse(dateEnd, inputFormatter);
-        client.setDateEnd(dateEndFormat.format(outputFormatter));
+        client.setDateCreation(dateCreation);
+//        LocalDate dateEndFormat = LocalDate.parse(dateEnd, inputFormatter);
+        client.setDateEnd(dateEnd);
         client.setIsTaken(false);
         clientService.save(client);
 

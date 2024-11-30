@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thêm Khách Hàng</title>
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -58,6 +61,13 @@
             border-radius: 4px;
         }
 
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #999;
+        }
+
         button {
             width: 100%;
             padding: 10px;
@@ -76,6 +86,31 @@
         input {
             text-transform: uppercase; /* Tất cả ô input sẽ hiển thị chữ viết hoa */
         }
+
+
+        #fabricList {
+            display: none;
+            border: 1px solid #ccc;
+            background-color: white;
+            position: absolute;
+            z-index: 1000;
+            max-height: 200px; /* Chiều cao tối đa */
+            overflow-y: auto; /* Cuộn nếu nội dung quá dài */
+            width: calc(1200px - 20px); /* Để rộng bằng ô input */
+            margin-top: 5px; /* Khoảng cách với ô input */
+            border-radius: 5px; /* Bo tròn góc */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+        }
+
+        #fabricList div {
+            padding: 10px; /* Padding cho từng mục */
+            cursor: pointer; /* Con trỏ khi hover */
+            transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
+        }
+
+        #fabricList div:hover {
+            background-color: #f0f0f0; /* Màu nền khi hover */
+        }
     </style>
 </head>
 <body>
@@ -85,17 +120,28 @@
         <a th:href="@{/}">Danh sách khách hàng</a>
         <a th:href="@{/addClient}">Thêm mới khách hàng</a>
         <a th:href="@{/search}">Tìm kiếm khách hàng</a>
+        <a th:href="@{/fabric}">Danh sách loại vải</a>
     </nav>
     <h1>Thêm Khách Hàng</h1>
     <form th:action="@{/client/save}" method="POST">
         <label for="name">Tên Khách Hàng:</label>
         <input type="text" id="name" name="name" required />
 
-        <label for="typeFabric">Loại Vải:</label>
+<!--        <label for="typeFabric">Loại Vải:</label>
         <input type="text" id="typeFabric" name="typeFabric" required />
 
-        <label for="moneyFabric">Tiền Vải:</label>
-        <input type="text" id="moneyFabric" name="moneyFabric" required  oninput="formatCurrency(this)" placeholder="0" />
+        <label for="moneyFabric">Tiền May:</label>
+        <input type="text" id="moneyFabric" name="moneyFabric" required  oninput="formatCurrency(this)" placeholder="0" />-->
+
+        <label for="typeFabric">Loại Vải:</label>
+        <input type="text" id="typeFabric" name="typeFabric" required onclick="showFabricList()" autocomplete="off" />
+
+        <div id="fabricList" style="display: none; border: 1px solid #ccc; background-color: white; position: absolute; z-index: 1000; max-height: 150px; overflow-y: auto;">
+            <!-- Danh sách loại vải sẽ được thêm vào đây -->
+        </div>
+
+        <label for="moneyFabric">Tiền May:</label>
+        <input type="text" id="moneyFabric" name="moneyFabric" required oninput="formatCurrency(this)" placeholder="0" />
 
         <label for="measure">Số Đo:</label>
         <input type="text" id="measure" name="measure" required />
@@ -107,17 +153,35 @@
         <input type="text" id="deposit" name="deposit" required  oninput="formatCurrency(this)" placeholder="0" />
 
         <label for="dateCreation">Ngày May:</label>
-        <input type="date" id="dateCreation" name="dateCreation" required onclick="this.showPicker()"/>
+        <input type="text" id="dateCreation" name="dateCreation" required />
         <!--        <input type="text" id="displayDateCreation" readonly />-->
 
         <label for="dateEnd">Ngày Lấy:</label>
-        <input type="date" id="dateEnd" name="dateEnd" required onclick="this.showPicker()"/>
+        <input type="text" id="dateEnd" name="dateEnd" required/>
         <!--        <input type="text" id="displayDateEnd" readonly />-->
 
         <button type="submit">Thêm Khách Hàng</button>
     </form>
+    <div class="footer">
+        <p>&copy; 2024 Công ty HaiMenShop. Tất cả quyền được bảo lưu.</p>
+    </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl/1.2.5/Intl.min.js"></script>
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<!-- Tệp ngôn ngữ tiếng Việt -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/vi.js"></script>
+
+<script>
+    flatpickr("#dateCreation", {
+        dateFormat: "d-m-Y", // Định dạng ngày
+        // locale: "vi" // Cài đặt ngôn ngữ
+    });
+    flatpickr("#dateEnd", {
+        dateFormat: "d-m-Y", // Định dạng ngày cho dateEnd
+        locale: "vi" // Cài đặt ngôn ngữ
+    });
+</script>
 <script>
     function updateDisplayDate(input, displayId) {
         const dateValue = input.value; // Nhận giá trị theo định dạng yyyy-mm-dd
@@ -151,12 +215,61 @@
         const yyyy = today.getFullYear();
 
         // Định dạng ngày theo định dạng yyyy-mm-dd
-        const currentDate = `${yyyy}-${mm}-${dd}`;
+        const currentDate = `${dd}-${mm}-${yyyy}`;
         document.getElementById('dateCreation').value = currentDate;
+        document.getElementById('dateEnd').value = currentDate;
     }
 
     // Gọi hàm khi trang được tải
     document.addEventListener('DOMContentLoaded', setCurrentDate);
+
+
+    async function fetchFabrics() {
+        try {
+            const response = await fetch('/fabric/list'); // Gọi API để lấy danh sách loại vải
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Có lỗi xảy ra khi gọi API:', error);
+            return [];
+        }
+    }
+
+    async function showFabricList() {
+        const fabricListDiv = document.getElementById('fabricList');
+        fabricListDiv.innerHTML = ''; // Xóa nội dung trước đó
+
+        const fabrics = await fetchFabrics(); // Gọi API để lấy loại vải
+
+        fabrics.forEach(fabric => {
+            const div = document.createElement('div');
+            div.textContent = fabric.typeFabric; // Giả sử thuộc tính là typeFabric
+            div.style.padding = '8px';
+            div.style.cursor = 'pointer';
+
+            div.onclick = function() {
+                document.getElementById('typeFabric').value = fabric.typeFabric;
+                document.getElementById('moneyFabric').value = fabric.moneyFabric; // Giả sử thuộc tính là moneyFabric
+                fabricListDiv.style.display = 'none'; // Ẩn danh sách sau khi chọn
+            };
+
+            fabricListDiv.appendChild(div);
+        });
+
+        fabricListDiv.style.display = 'block'; // Hiển thị danh sách
+    }
+
+    // Tắt danh sách khi nhấp ra ngoài
+    document.addEventListener('click', function(event) {
+        const fabricListDiv = document.getElementById('fabricList');
+        const typeFabricInput = document.getElementById('typeFabric');
+
+        if (!typeFabricInput.contains(event.target) && !fabricListDiv.contains(event.target)) {
+            fabricListDiv.style.display = 'none';
+        }
+    });
 </script>
 </body>
 </html>

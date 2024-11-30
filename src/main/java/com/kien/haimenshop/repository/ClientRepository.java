@@ -10,9 +10,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
-    @Query(value = "select c from Client c where c.name like %:name% order by c.isTaken asc, c.dateEnd desc")
+    @Query(value = "select c from Client c where c.name like %:name% order by c.isTaken asc, c.dateEnd asc")
     Page<Client> findClientByName(@Param("name") String name, Pageable pageable);
-    @Query(value = "select c from Client c order by c.isTaken asc, c.dateEnd desc")
+    @Query(value = "select c from Client c order by c.isTaken asc, c.dateEnd asc ")
     Page<Client> findAllClient(Pageable pageable);
+    @Query(value = "select c from Client c order by c.isTaken asc, c.dateEnd asc ")
     Client findClientById(Long id);
 }
