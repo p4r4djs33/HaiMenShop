@@ -2,99 +2,161 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link th:href="@{/css/addClient.css}" rel="stylesheet" media="screen" type="text/css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Khách Hàng</title>
     <style>
-        input[type="text"] {
-            text-transform:uppercase;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-transform: uppercase; /* Áp dụng viết hoa cho toàn bộ văn bản */
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            background-color: #4CAF50;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        input {
+            text-transform: uppercase; /* Tất cả ô input sẽ hiển thị chữ viết hoa */
         }
     </style>
 </head>
-<body style="text-transform:uppercase;  font-weight: bold; font-size: 20px; text-align: center">
-<div th:insert="header :: header"></div>
+<body>
+
 <div class="container">
-    <div class="main-body">
-        <!-- Breadcrumb -->
-        <nav aria-label="breadcrumb" class="main-breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a th:href="@{/}">Danh sách khách hàng</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Thêm mới khách hàng</a></li>
-            </ol>
-        </nav>
-        <!-- /Breadcrumb -->
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <form th:action="@{/client/save}" enctype="multipart/form-data" method="post">
-                            <div class="row mb-3">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Tên</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="text" class="form-control" th:name="name">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Loại vải</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="text" class="form-control" th:name="typeFabric" >
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Tiền vải</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="text" class="form-control" th:name="moneyFabric">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Số đo</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="text" class="form-control" th:name="measure">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Thông tin thêm</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="text" class="form-control" th:name="moreInformation">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Đặt cọc</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="text" class="form-control" th:name="deposit">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Ngày lấy</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="text" class="form-control" th:name="dateEnd">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-3"></div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input type="submit" class="btn btn-primary px-4" value="Lưu khách">
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <nav>
+        <a th:href="@{/}">Danh sách khách hàng</a>
+        <a th:href="@{/addClient}">Thêm mới khách hàng</a>
+        <a th:href="@{/search}">Tìm kiếm khách hàng</a>
+    </nav>
+    <h1>Thêm Khách Hàng</h1>
+    <form th:action="@{/client/save}" method="POST">
+        <label for="name">Tên Khách Hàng:</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="typeFabric">Loại Vải:</label>
+        <input type="text" id="typeFabric" name="typeFabric" required />
+
+        <label for="moneyFabric">Tiền Vải:</label>
+        <input type="text" id="moneyFabric" name="moneyFabric" required  oninput="formatCurrency(this)" placeholder="0" />
+
+        <label for="measure">Số Đo:</label>
+        <input type="text" id="measure" name="measure" required />
+
+        <label for="moreInformation">Thông Tin Thêm:</label>
+        <input type="text" id="moreInformation" name="moreInformation" />
+
+        <label for="deposit">Đặt Cọc:</label>
+        <input type="text" id="deposit" name="deposit" required  oninput="formatCurrency(this)" placeholder="0" />
+
+        <label for="dateCreation">Ngày May:</label>
+        <input type="date" id="dateCreation" name="dateCreation" required onclick="this.showPicker()"/>
+        <!--        <input type="text" id="displayDateCreation" readonly />-->
+
+        <label for="dateEnd">Ngày Lấy:</label>
+        <input type="date" id="dateEnd" name="dateEnd" required onclick="this.showPicker()"/>
+        <!--        <input type="text" id="displayDateEnd" readonly />-->
+
+        <button type="submit">Thêm Khách Hàng</button>
+    </form>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl/1.2.5/Intl.min.js"></script>
+<script>
+    function updateDisplayDate(input, displayId) {
+        const dateValue = input.value; // Nhận giá trị theo định dạng yyyy-mm-dd
+        const [year, month, day] = dateValue.split('-'); // Tách năm, tháng, ngày
+        const formattedDate = `${day}/${month}/${year}`; // Định dạng lại thành dd/mm/yyyy
+        document.getElementById(displayId).value = formattedDate; // Hiển thị vào ô input ẩn
+    }
+
+    function formatCurrency(input) {
+        // Xóa tất cả ký tự không phải số
+        let value = input.value.replace(/[^0-9]/g, '');
+
+        // Chuyển đổi thành số và định dạng
+        const formattedValue = new Intl.NumberFormat('vi-VN', {
+            style: 'decimal'
+        }).format(value);
+
+        // Cập nhật giá trị vào ô input
+        input.value = formattedValue;
+
+        // Di chuyển con trỏ đến cuối ô input
+        input.setSelectionRange(input.value.length, input.value.length);
+    }
+
+
+    // Hàm thiết lập ngày hiện tại cho ô input
+    function setCurrentDate() {
+        const today = new Date();
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+        const yyyy = today.getFullYear();
+
+        // Định dạng ngày theo định dạng yyyy-mm-dd
+        const currentDate = `${yyyy}-${mm}-${dd}`;
+        document.getElementById('dateCreation').value = currentDate;
+    }
+
+    // Gọi hàm khi trang được tải
+    document.addEventListener('DOMContentLoaded', setCurrentDate);
+</script>
 </body>
 </html>

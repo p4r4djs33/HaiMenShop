@@ -2,83 +2,391 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Khách Hàng</title>
     <style>
-        p {
-            text-transform:uppercase;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-transform: uppercase; /* Áp dụng viết hoa cho toàn bộ văn bản */
+            text-align: center; /* Căn giữa văn bản trong body */
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        nav {
+            background-color: #4CAF50;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center; /* Căn giữa văn bản trong body */
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        input[type="checkbox"] {
+            transform: scale(1.3);
+            margin-right: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .page-item {
+            margin: 0 15px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .page-link {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .page-link:hover {
+            background-color: #45a049;
+        }
+
+        .disabled {
+            background-color: #ccc;
+            pointer-events: none;
+            color: #666;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; /* Ẩn modal mặc định */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            padding-top: 60px;
+            font-size: 13px; /* Kích thước chữ lớn hơn */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 30px; /* Tăng padding để nội dung thoải mái hơn */
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+            border-radius: 8px; /* Bo góc cho modal */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Thêm bóng cho modal */
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal input {
+            width: calc(100% - 20px); /* Đảm bảo input không chạm viền */
+            padding: 10px;
+            margin: 10px 0; /* Tăng margin cho khoảng cách */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Thêm bóng cho input */
+        }
+
+        .modal button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 5px; /* Thêm khoảng cách giữa các nút */
+        }
+
+        .modal button:hover {
+            background-color: #45a049;
+        }
+
+        /* Nút sửa */
+        button {
+            background-color: #007BFF; /* Màu xanh dương cho nút sửa */
+            color: white;
+            /*padding: 10px 15px;*/
+            font-size: 13px; /* Kích thước chữ lớn hơn */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-transform: uppercase; /* Áp dụng viết hoa cho toàn bộ văn bản */
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Đổi màu khi hover */
         }
     </style>
-
 </head>
-<body style="text-transform:uppercase;  font-weight: bold; font-size: 20px; text-align: center">
-
-<div th:insert="header :: header"></div>
-
+<body>
 
 <div class="container">
-    <div class="main-body">
-        <!-- Breadcrumb -->
-        <nav aria-label="breadcrumb" class="main-breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Danh sách khách hàng</li>
-                <li class="breadcrumb-item"><a th:href="@{/add-client}">Thêm mới khách hàng</a></li>
-            </ol>
-        </nav>
-        <!-- /Breadcrumb -->
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <form class="row" style="margin-bottom: 20px;" th:action="@{/search}" method="post">
-                            <input class="col-sm-9" type="text" th:name="name" placeholder="Nhập tên khách muốn tìm">
-                            <input class="col-sm-3" type="submit" value="Tìm kiếm">
-                        </form>
+    <nav>
+        <a th:href="@{/}">Danh sách khách hàng</a>
+        <a th:href="@{/addClient}">Thêm mới khách hàng</a>
+        <a th:href="@{/search}">Tìm kiếm khách hàng</a>
+    </nav>
 
-                        <div class="row" style="border-bottom: 1px solid; border-top: 1px solid" th:each="row : ${clientList}">
-                            <div class="col-sm-4" style="border-right: 1px solid">
-                                <div class="row justify-content-center">
-                                    <p th:text="${row.getName()}"></p>
-                                </div>
-                                <div class="row justify-content-center">
-                                    <p th:text="${row.getTypeFabric()}"></p>
-                                </div>
-                                <div class="row justify-content-center">
-                                    <p th:text="${row.getMoneyFabric()}"></p>
-                                </div>
-                            </div>
-                            <div class="col-sm-8">
-                                <div class="row justify-content-center">
-                                    <p th:text="${row.getMeasure()}"></p>
-                                </div>
-                                <div class="row justify-content-center">
-                                    <p th:text="${row.getMoreInformation()}"></p>
-                                </div>
-                                <div class="row justify-content-center">
-                                    <p th:text="${row.getDeposit()}"></p>
-                                </div>
-                                <div class="row justify-content-between">
-                                    <div class="col-auto mr-auto">
-                                        <p th:text="${row.getDateCreation()}"></p>
-                                    </div>
-                                    <div class="col-auto">
-                                        <p th:text="${row.getDateEnd()}"></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <h1>Danh Sách Khách Hàng</h1>
 
-                        <div style="font-size: 25px; text-align: center">
-                            <a th:href="@{'/'(page=${clientList.number - 1})}" th:if="${clientList.hasPrevious()}">Trước</a>
-                            <span th:text="${clientList.number + 1}"></span>/<span th:text="${clientList.totalPages}"></span>
-                            <a th:href="@{'/'(page=${clientList.number + 1})}" th:if="${clientList.hasNext()}">Sau</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <table>
+        <thead>
+        <tr>
+            <th>Tên Khách Hàng</th>
+            <th>Loại Vải</th>
+            <th>Tiền Vải</th>
+            <th>Số Đo</th>
+            <th>Thông Tin Thêm</th>
+            <th>Đặt Cọc</th>
+            <th>Ngày May</th>
+            <th>Ngày Lấy</th>
+            <th>Đã Lấy</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="client : ${clientList}">
+            <td th:text="${client.name.toUpperCase()}"></td>
+            <td th:text="${client.typeFabric.toUpperCase()}"></td>
+            <td th:text="${client.moneyFabric}"></td>
+            <td th:text="${client.measure}"></td>
+            <td th:text="${client.moreInformation}"></td>
+            <td th:text="${client.deposit}"></td>
+            <td th:text="${client.dateCreation}"></td>
+            <td th:text="${client.dateEnd}"></td>
+            <td class="checkbox-container">
+                <input type="checkbox"
+                       th:checked="${client.isTaken}"
+                       th:data-id="${client.id}"
+                       onclick="updateClientStatus(this)"/>
+                <span th:text="${client.isTaken ? 'Đã lấy' : 'Chưa lấy'}"></span>
+            </td>
+            <td>
+                <button th:data-id="${client.id}"
+                        th:data-name="${client.name}"
+                        th:data-type-fabric="${client.typeFabric}"
+                        th:data-money-fabric="${client.moneyFabric}"
+                        th:data-measure="${client.measure}"
+                        th:data-more-information="${client.moreInformation}"
+                        th:data-deposit="${client.deposit}"
+                        th:data-date-creation="${client.dateCreation}"
+                        th:data-date-end="${client.dateEnd}"
+                        onclick="openModal(this)">Sửa</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
+    <div class="pagination">
+        <a th:classappend="${!clientList.hasPrevious()} ? 'disabled'"
+           th:href="@{'/'(page=${clientList.number - 1})}" class="page-link">Trước</a>
+
+        <span class="page-item">
+        Trang <strong th:text="${clientList.number + 1}"></strong> /
+        <strong th:text="${clientList.totalPages}"></strong>
+    </span>
+
+        <a th:classappend="${!clientList.hasNext()} ? 'disabled'"
+           th:href="@{'/'(page=${clientList.number + 1})}" class="page-link">Sau</a>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 Công ty TNHH ABC. Tất cả quyền được bảo lưu.</p>
     </div>
 </div>
+
+<!-- Modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Thông Tin Khách Hàng</h2>
+        <input type="text" id="clientName" placeholder="Tên Khách Hàng">
+        <input type="text" id="clientTypeFabric" placeholder="Loại Vải">
+        <input type="number" id="clientMoneyFabric" placeholder="Tiền Vải">
+        <input type="text" id="clientMeasure" placeholder="Số Đo">
+        <input type="text" id="clientMoreInformation" placeholder="Thông Tin Thêm">
+        <input type="number" id="clientDeposit" placeholder="Đặt Cọc">
+        <input type="date" id="clientDateCreation" placeholder="Ngày May">
+        <input type="date" id="clientDateEnd" placeholder="Ngày Lấy">
+        <div style="text-align: right;">
+            <button onclick="updateClient()">Sửa</button>
+            <button onclick="closeModal()">Quay lại</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateClientStatus(checkbox) {
+        const clientId = checkbox.getAttribute('data-id');
+        const isTaken = checkbox.checked;
+
+        // Cập nhật văn bản trạng thái
+        const statusText = checkbox.nextElementSibling; // Lấy phần tử <span> bên cạnh checkbox
+        statusText.textContent = isTaken ? 'Đã lấy' : 'Chưa lấy';
+
+        fetch(`/client/take/product?id=${clientId}&isTaken=${isTaken}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Cập nhật thành công:', data);
+            })
+            .catch(error => {
+                console.error('Có lỗi xảy ra:', error);
+                // Có thể reset trạng thái checkbox nếu cần
+                checkbox.checked = !isTaken; // Đặt lại trạng thái checkbox nếu có lỗi
+                // Cập nhật lại trạng thái văn bản
+                statusText.textContent = checkbox.checked ? 'Đã lấy' : 'Chưa lấy';
+            });
+    }
+
+    function openModal(button) {
+        const id = button.getAttribute('data-id');
+        const name = button.getAttribute('data-name');
+        const typeFabric = button.getAttribute('data-type-fabric');
+        const moneyFabric = button.getAttribute('data-money-fabric');
+        const measure = button.getAttribute('data-measure');
+        const moreInformation = button.getAttribute('data-more-information');
+        const deposit = button.getAttribute('data-deposit');
+        const dateCreation = button.getAttribute('data-date-creation');
+        const dateEnd = button.getAttribute('data-date-end');
+
+        // Điền các giá trị vào input trong modal
+        document.getElementById('clientName').value = name;
+        document.getElementById('clientTypeFabric').value = typeFabric;
+        document.getElementById('clientMoneyFabric').value = moneyFabric;
+        document.getElementById('clientMeasure').value = measure;
+        document.getElementById('clientMoreInformation').value = moreInformation;
+        document.getElementById('clientDeposit').value = deposit;
+        document.getElementById('clientDateCreation').value = dateCreation;
+        document.getElementById('clientDateEnd').value = dateEnd;
+
+        // Mở modal
+        document.getElementById('myModal').style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById('myModal').style.display = "none";
+    }
+
+    function updateClient() {
+        // Lấy thông tin từ các input
+        const updatedClient = {
+            name: document.getElementById('clientName').value,
+            typeFabric: document.getElementById('clientTypeFabric').value,
+            moneyFabric: document.getElementById('clientMoneyFabric').value,
+            measure: document.getElementById('clientMeasure').value,
+            moreInformation: document.getElementById('clientMoreInformation').value,
+            deposit: document.getElementById('clientDeposit').value,
+            dateCreation: document.getElementById('clientDateCreation').value,
+            dateEnd: document.getElementById('clientDateEnd').value
+        };
+
+        // Gửi dữ liệu cập nhật đến server
+        fetch(`/client/update/${updatedClient.id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedClient)
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Cập nhật thành công');
+                    closeModal();
+                    // Cập nhật lại danh sách khách hàng nếu cần
+                    location.reload(); // Tải lại trang để cập nhật danh sách
+                } else {
+                    console.error('Có lỗi xảy ra khi cập nhật');
+                }
+            })
+            .catch(error => {
+                console.error('Có lỗi xảy ra:', error);
+            });
+    }
+</script>
 </body>
 </html>
